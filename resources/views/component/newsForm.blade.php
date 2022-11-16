@@ -129,8 +129,17 @@
                     contentType: false,
                     data: fd,
                     success: function(response) {
-                        alert('success')
-                        // location.href = "{{ url('/') }}";
+                        Swal.fire({
+                            icon: 'success',
+                            title: response,
+                            showDenyButton: false,
+                            showCancelButton: false,
+                            confirmButtonText: 'Yes'
+                        }).then((result) => {
+                            if (response == 'success') {
+                            }
+                            location.href = "{{ url('/data') }}";
+                        });
                     },
                     error: function(err) {
 
@@ -162,8 +171,16 @@
                     contentType: false,
                     data: fd,
                     success: function(response) {
-                        alert('success')
-                        // location.href = "{{ url('/') }}";
+                        Swal.fire({
+                            icon: 'success',
+                            title: response,
+                            showDenyButton: false,
+                            showCancelButton: false,
+                            confirmButtonText: 'Yes'
+                        }).then((result) => {
+                            if (response == 'success') {}
+                            location.href = "{{ url('/data') }}";
+                        });
                     },
                     error: function(err) {
 
