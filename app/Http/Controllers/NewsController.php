@@ -24,6 +24,8 @@ class NewsController extends Controller
         return view('component.newsForm', [
             'categories' => $categories,
             'editions' => $editions,
+            'news' => new News,
+            'selectedCategoriesIds' => [],
         ]);
     }
 
@@ -38,8 +40,14 @@ class NewsController extends Controller
             $request->description;
         $formFields['short_brief'] =
             $request->shortBrief;
-        $formFields['author'] =
-            Auth::user()->name;
+
+        if (Auth::check()) {
+            $formFields['author'] =
+                Auth::user()->name;
+        } else {
+            $formFields['author'] = 'Guest';
+        }
+
 
         //get edition id by name
         $edition = Edition::where('name', $request->edition)->get();

@@ -32,11 +32,10 @@
         <div class="form-row">
             <div class="form-group col-12 ">
                 <label for="name">Name</label>
-                <input type="text" class="form-control" id="name" name="name"
-                    value="{{ $news->name ? $news->name : '' }}">
+                <input type="text" class="form-control" id="name" name="name" value="{{ $news?->name }}">
             </div>
 
-            
+
             @foreach ($categories as $key => $category)
                 <div class="form-group col-3">
                     <input {{ in_array($category->id, $selectedCategoriesIds) ? 'checked' : '' }} type="checkbox"
@@ -48,13 +47,12 @@
         <div class="form-group">
             <label for="shortBrief">Short Brief</label>
             <input type="text" class="form-control" id="shortBrief" name="shortBrief"
-                placeholder="Write a short brief about this news"
-                value="{{ $news->short_brief ? $news->short_brief : '' }}">
+                placeholder="Write a short brief about this news" value="{{ $news?->short_brief }}">
         </div>
         <div class="form-group">
             {{-- CkEditor --}}
             <label for="description">Description</label>
-            <textarea class="form-control textArea" id="description" name="description" rows="3">{{ $news->description ? $news->description : '' }}</textarea>
+            <textarea class="form-control textArea" id="description" name="description" rows="3">{{ $news?->description }}</textarea>
         </div>
 
         <div class="form-group">
@@ -96,8 +94,7 @@
                     error.insertAfter(element.parent());
                 },
                 submitHandler: function(form) {
-                    console.log($('#category').val());
-                    // addNews();
+                    addNews();
                 }
             });
 
