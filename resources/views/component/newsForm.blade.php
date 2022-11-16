@@ -25,7 +25,7 @@
             <select class="custom-select mr-sm-2" id="edition" name="edition">
                 <option value="" disabled selected>Choose...</option>
                 @foreach ($editions as $edition)
-                    <option value="{{ $edition->name }}">{{ $edition->name }}</option>
+                    <option value="{{ $edition->id }}">{{ $edition->name }}</option>
                 @endforeach
             </select>
         </div>
@@ -39,7 +39,7 @@
             @foreach ($categories as $key => $category)
                 <div class="form-group col-3">
                     <input {{ in_array($category->id, $selectedCategoriesIds) ? 'checked' : '' }} type="checkbox"
-                        id="category" name="category" value="{{ $category->name }}">
+                        name="category" value="{{ $category->id }}">
                     <label for="category"> {{ $category->name }} </label><br>
                 </div>
             @endforeach
@@ -94,7 +94,14 @@
                     error.insertAfter(element.parent());
                 },
                 submitHandler: function(form) {
-                    addNews();
+                    if (window.location.href.indexOf("edit") > -1) {
+                        updateNews();
+                    } else {
+                        addNews();
+
+
+                    }
+
                 }
             });
 
@@ -103,13 +110,53 @@
 
                 fd.append('name', $('#name').val());
                 fd.append('description', $('#description').val());
-                fd.append('category', $('#category').val());
+
+                var arr = [];
+
+                $('input:checked').each(function() {
+                    arr.push($(this).val());
+                });
+
+                fd.append('category', arr);
                 fd.append('shortBrief', $('#shortBrief').val());
                 fd.append('edition', $('#edition').val());
                 fd.append('_token', '{{ csrf_token() }}');
 
                 $.ajax({
                     url: "/news/store",
+                    type: "POST",
+                    processData: false,
+                    contentType: false,
+                    data: fd,
+                    success: function(response) {
+                        alert('success')
+                        // location.href = "{{ url('/') }}";
+                    },
+                    error: function(err) {
+
+                    }
+                });
+            }
+
+            function updateNews() {
+                var fd = new FormData();
+
+                fd.append('name', $('#name').val());
+                fd.append('description', $('#description').val());
+
+                var arr = [];
+
+                $('input:checked').each(function() {
+                    arr.push($(this).val());
+                });
+
+                fd.append('category', arr);
+                fd.append('shortBrief', $('#shortBrief').val());
+                fd.append('edition', $('#edition').val());
+                fd.append('_method', 'PUT');
+                fd.append('_token', '{{ csrf_token() }}');
+                $.ajax({
+                    url: "/news/{{ $news->id }}/put",
                     type: "POST",
                     processData: false,
                     contentType: false,

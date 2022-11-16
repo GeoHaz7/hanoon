@@ -40,3 +40,7 @@ Route::post('/news/store', [App\Http\Controllers\NewsController::class, 'storeNe
 
 //edit news form
 Route::get('/news/{id}/edit', [App\Http\Controllers\NewsController::class, 'editNewsForm'])->name('editNewsForm');
+
+
+//edit news form
+Route::put('/news/{id}/put', [App\Http\Controllers\NewsController::class, 'updateNews'])->name('updateNews');

@@ -33,6 +33,8 @@ class NewsController extends Controller
     public function storeNews(Request $request)
     {
 
+        $categoriesArr = explode(',', $request->category);
+
         // FormFeild for the news
         $formFields['name'] =
             $request->name;
@@ -48,22 +50,12 @@ class NewsController extends Controller
             $formFields['author'] = 'Guest';
         }
 
-
-        //get edition id by name
-        $edition = Edition::where('name', $request->edition)->get();
         $formFields['edition_id'] =
-            $edition[0]->id;
+            $request->edition;
 
-        //get category id by name
-        $category = Category::where('name', $request->category)->get();
         $news = News::create($formFields);
 
-        //add to category news table
-        $formFields2['news_id'] =
-            $news->id;
-        $formFields2['category_id'] =
-            $category[0]->id;
-        CategoryNews::create($formFields2);
+        $news->category()->sync($categoriesArr);
     }
 
     //edit news form
@@ -87,6 +79,39 @@ class NewsController extends Controller
             'selectedCategoriesIds' => $selectedCategoriesIds,
         ]);
     }
+
+    //update news
+    public function updateNews(Request $request, $id)
+    {
+        $categoriesArr = explode(',', $request->category);
+
+
+        $news = News::findorfail($id);
+
+        // FormFeild for the news
+        $formFields['name'] =
+            $request->name;
+        $formFields['description'] =
+            $request->description;
+        $formFields['short_brief'] =
+            $request->shortBrief;
+
+        if (Auth::check()) {
+            $formFields['author'] =
+                Auth::user()->name;
+        } else {
+            $formFields['author'] = 'Guest';
+        }
+
+
+        $formFields['edition_id'] =
+            $request->edition;
+
+        $news->update($formFields);
+
+        $news->category()->sync($categoriesArr);
+    }
+
 
 
     //get news
